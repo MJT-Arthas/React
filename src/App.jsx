@@ -1,19 +1,22 @@
 import React, { Component, Fragment } from "react";
 import "./style.css";
 import ToDOItem from "./ToDOItem";
+import axios from "axios";
 
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputValue: "Hello",
+      inputValue: "",
       list: [],
     };
     this.txtChange = this.txtChange.bind(this);
     this.btnClick = this.btnClick.bind(this);
     this.liClick = this.liClick.bind(this);
   }
+
   render() {
+    console.log("parent render");
     return (
       <Fragment>
         <div>
@@ -31,6 +34,24 @@ export default class App extends Component {
       </Fragment>
     );
   }
+
+  componentDidMount() {
+    axios
+      .get("/list.json")
+      .then((res) => {
+        alert("success");
+        console.log(res.data);
+        this.setState(()=>{
+          return{
+            list:res.data
+          }
+        })
+      })
+      .catch(() => {
+        alert("error");
+      });
+  }
+
   getToDoItem() {
     return this.state.list.map((item, index) => {
       return (
@@ -43,10 +64,8 @@ export default class App extends Component {
           key={index}
           content={item}
           index={index}
-          delList={this.liClick}
-        >
-          {" "}
-        </ToDOItem>
+          delListChild={this.liClick}
+        />
       );
     });
   }
