@@ -1,8 +1,18 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import { Input, Button, List } from "antd";
+import axios from "axios";
+
+
 import store from "./store";
-import {CHANGE_INPUT_VALUE,ADD_TODO_ITEM,DELETE_TODO_ITEM} from './store/actionTypes'
+import {
+  getInputChangeAction,
+  getAddItemAction,
+  getDelItemAction,
+  initItemAction,
+  // getToDList,
+  
+} from "./store/actionCreators";
+import ToListUI from "./ToListUI";
 
 export default class ToDoList extends Component {
   constructor(props) {
@@ -11,56 +21,51 @@ export default class ToDoList extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleStoreChange = this.handleStoreChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.delList = this.delList.bind(this);
     store.subscribe(this.handleStoreChange);
   }
   render() {
     return (
-      <div>
-        <div style={{ margin: 10 }}>
-          <Input
-            value={this.state.inputValue}
-            placeholder="Todo Info"
-            style={{ width: 300, marginRight: 10 }}
-            onChange={this.handleInputChange}
-          />
-          <Button type="primary" onClick={this.handleClick}>
-            提交
-          </Button>
-        </div>
-        <List
-          style={{ width: 370, marginLeft: 10 }}
-          bordered
-          dataSource={this.state.list}
-          renderItem={(item, index) => (
-            <List.Item onClick={this.delList.bind(this, index)}>
-              {item}
-            </List.Item>
-          )}
-        />
-      </div>
+      <ToListUI
+        inputValue={this.state.inputValue}
+        list={this.state.list}
+        handleInputChange={this.handleInputChange}
+        handleClick={this.handleClick}
+        delList={this.delList}
+      />
     );
   }
+
+  componentDidMount() {
+    axios
+		.get("/list.json")
+		.then((res) => {
+			alert("success");
+      const data = res.data;
+      // console.log(res.data);
+      const action = initItemAction(data)
+      // console.log(action);
+      // console.log(action.data);
+      store.dispatch(action);
+		})
+		.catch(() => {
+      alert("error");
+		});
+  }
+
   handleInputChange(e) {
-    const action = {
-      type: CHANGE_INPUT_VALUE,
-      value: e.target.value,
-    };
+    const action = getInputChangeAction(e.target.value);
     store.dispatch(action);
   }
   handleStoreChange() {
     this.setState(store.getState());
   }
   handleClick() {
-    const action = {
-      type: ADD_TODO_ITEM,
-    };
+    const action = getAddItemAction();
     store.dispatch(action);
   }
   delList(index) {
-    const action = {
-      type: DELETE_TODO_ITEM,
-      index,
-    };
+    const action = getDelItemAction(index);
     store.dispatch(action);
   }
 }
