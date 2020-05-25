@@ -4,8 +4,7 @@ import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, INIT_ITEM_ACTION }
 const defaultState = {
 	inputValue: '123',
 	list: [
-		"Racing car sprays burning fuel into crowd.",
-		"Japanese princess to wed commoner.",
+
 
 	]
 }

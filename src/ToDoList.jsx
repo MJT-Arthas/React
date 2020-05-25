@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "antd/dist/antd.css";
-import axios from "axios";
+
 
 
 import store from "./store";
@@ -8,8 +8,7 @@ import {
   getInputChangeAction,
   getAddItemAction,
   getDelItemAction,
-  initItemAction,
-  // getToDList,
+  getToDList,
   
 } from "./store/actionCreators";
 import ToListUI from "./ToListUI";
@@ -37,20 +36,23 @@ export default class ToDoList extends Component {
   }
 
   componentDidMount() {
-    axios
-		.get("/list.json")
-		.then((res) => {
-			alert("success");
-      const data = res.data;
-      // console.log(res.data);
-      const action = initItemAction(data)
-      // console.log(action);
-      // console.log(action.data);
-      store.dispatch(action);
-		})
-		.catch(() => {
-      alert("error");
-		});
+    const action =getToDList()
+    store.dispatch(action);
+    // console.log(action)
+    // axios
+		// .get("/list.json")
+		// .then((res) => {
+		// 	alert("success");
+    //   const data = res.data;
+    //   // console.log(res.data);
+    //   const action = initItemAction(data)
+    //   // console.log(action);
+    //   // console.log(action.data);
+    //   store.dispatch(action);
+		// })
+		// .catch(() => {
+    //   alert("error");
+		// });
   }
 
   handleInputChange(e) {

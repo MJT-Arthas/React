@@ -24,7 +24,6 @@ export const getToDList = () => ({
 	type: GET_TODO_LIST,
 })
 
-
 // return (dispatch) => {
 // 	axios
 // 		.get("/list.json")
